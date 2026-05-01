@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 using namespace std;
 
 // ================= CONSTANT =================
@@ -48,7 +49,6 @@ void displayLostItems() {
              << temp->data.name << " | "
              << temp->data.owner << " | "
              << temp->data.location << endl;
-
         temp = temp->next;
     }
 }
@@ -115,17 +115,13 @@ void enqueue(Item item) {
         if (front == -1)
             front = 0;
 
-        rear++;
-        queueArr[rear] = item;
-
+        queueArr[++rear] = item;
         cout << "Found item added successfully!\n";
     }
 }
 
 Item dequeue() {
-    Item item = queueArr[front];
-    front++;
-    return item;
+    return queueArr[front++];
 }
 
 bool isEmptyQueue() {
@@ -148,9 +144,8 @@ Item stackArr[MAX];
 int top = -1;
 
 void push(Item item) {
-    if (top < MAX - 1) {
+    if (top < MAX - 1)
         stackArr[++top] = item;
-    }
 }
 
 void displayStack() {
@@ -180,9 +175,9 @@ bool login(string role) {
     file >> u >> p >> r;
 
     while (!file.fail()) {
-        if (u == username && p == password && r == role) {
+        if (u == username && p == password && r == role)
             return true;
-        }
+
         file >> u >> p >> r;
     }
 
@@ -223,7 +218,7 @@ int main() {
     if (role == "admin") {
         while (true) {
             cout << "\n===== ADMIN MENU =====\n";
-            cout << "1. Add Lost Item\n";
+            cout << "1. Add Lost Item (Auto ID)\n";
             cout << "2. View Lost Items\n";
             cout << "3. Process Found Item\n";
             cout << "4. View Found Queue\n";
@@ -234,13 +229,25 @@ int main() {
 
             if (choice == 1) {
                 Item item;
-                cout << "ID: "; cin >> item.id;
-                cout << "Name: "; cin >> item.name;
-                cout << "Owner: "; cin >> item.owner;
-                cout << "Location: "; cin >> item.location;
+
+                item.id = rand() % 10000; // AUTO ID
+
+                cout << "Name: ";
+                cin >> item.name;
+
+                cout << "Owner: ";
+                cin >> item.owner;
+
+                cout << "Location: ";
+                cin >> item.location;
+
                 addLostItem(item);
+
+                cout << "Lost item recorded with ID: " << item.id << endl;
             }
+
             else if (choice == 2) displayLostItems();
+
             else if (choice == 3) {
                 if (!isEmptyQueue()) {
                     Item item = dequeue();
@@ -250,13 +257,17 @@ int main() {
                     cout << "No found items!\n";
                 }
             }
+
             else if (choice == 4) displayQueue();
+
             else if (choice == 5) displayStack();
+
             else if (choice == 6) {
                 saveToFile();
                 cout << "Saved. Exiting...\n";
                 break;
             }
+
             else cout << "Invalid choice!\n";
         }
     }
@@ -274,32 +285,51 @@ int main() {
 
             if (choice == 1) {
                 Item item;
-                cout << "ID: "; cin >> item.id;
-                cout << "Name: "; cin >> item.name;
-                cout << "Owner: "; cin >> item.owner;
-                cout << "Location: "; cin >> item.location;
+
+                cout << "Name: ";
+                cin >> item.name;
+
+                cout << "Location: ";
+                cin >> item.location;
+
+                item.id = rand() % 10000;
+                item.owner = "UNKNOWN";
+
                 addLostItem(item);
+
+                cout << "Lost item submitted!\n";
             }
+
             else if (choice == 2) {
                 string name;
-                cout << "Enter name: ";
+                cout << "Name: ";
                 cin >> name;
                 searchItem(name);
             }
+
             else if (choice == 3) {
                 Item item;
-                cout << "ID: "; cin >> item.id;
-                cout << "Name: "; cin >> item.name;
-                cout << "Owner: "; cin >> item.owner;
-                cout << "Location: "; cin >> item.location;
+
+                cout << "Name: ";
+                cin >> item.name;
+
+                cout << "Location: ";
+                cin >> item.location;
+
+                item.id = rand() % 10000;
+                item.owner = "UNKNOWN";
+
                 enqueue(item);
+
                 cout << "Found item submitted!\n";
             }
+
             else if (choice == 4) {
                 saveToFile();
                 cout << "Saved. Exiting...\n";
                 break;
             }
+
             else cout << "Invalid choice!\n";
         }
     }
